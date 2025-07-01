@@ -4,7 +4,7 @@ from calender import create_event
 from datetime import datetime, timedelta
 import lance
 import re
-
+from langchain.tools import tool 
 class CheckAvailabilityInput(BaseModel):
     date: str = Field(description="Date in YYYY-MM-DD format to check availability")
     
@@ -13,10 +13,13 @@ class BookAppointmentInput(BaseModel):
     time: str = Field(description="Time in HH:MM format")
     summary: str = Field(description="Appointment summary")
 
+@tool
 def check_availability_tool(date: str):
+    """check availability for the appointment"""
     return check_availability(date)
-
+@tool
 def book_appointment_tool(date: str, time: str, summary: str):
+    """book the appointment"""
     return create_event(date)
 
 def parse_date(text: str) -> str:

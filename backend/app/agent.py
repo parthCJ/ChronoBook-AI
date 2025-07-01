@@ -8,6 +8,8 @@ from langchain.tools.render import format_tool_to_openai_function
 import json
 from dotenv import load_dotenv
 import os
+from langchain_core.utils.function_calling import convert_to_openai_function
+from langchain_openai import ChatOpenAI
 
 load_dotenv()
 api_key = os.getenv("API_KEY")
@@ -18,4 +20,10 @@ model = ChatDeepSeek(
     temperature="0.3",
     api_key = api_key
 )
+
+
+
+tools = [check_availability_tool, book_appointment_tool]
+functions = [convert_to_openai_function(t) for t in tools]
+model = model.bind(functions=functions)
 
