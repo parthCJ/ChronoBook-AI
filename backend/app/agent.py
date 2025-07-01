@@ -1,4 +1,5 @@
 # from langchain_community.chat_models import ChatDeepSeek
+from langchain_deepseek import ChatDeepSeek
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.prompts import ChatMessagePromptTemplate, MessagesPlaceholder
 from langgraph.graph import END, MessageGraph
@@ -12,9 +13,9 @@ load_dotenv()
 api_key = os.getenv("API_KEY")
 print(api_key)
 
-# model = ChatDeepSeek(
-#     model="deepseek-chat",
-#     temperature="0.3",
-#     api_key = api_key
-# )
+model = ChatDeepSeek(
+    model="deepseek-chat",
+    temperature="0.3",
+    api_key = api_key
+)
 
