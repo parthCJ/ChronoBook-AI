@@ -34,3 +34,47 @@ def should_use_tool(state):
     if "book" in last_message.content.lower() or "appointment" in last_message.content.lower():
         return "use_tool"
     return "generate_response"
+
+# Create the agent workflow
+def should_use_tool(state):
+    """
+    Determines whether to use a tool based on the content of the last message.
+
+    Args:
+        state (List[Message]): The conversation history, where each item has a 'content' attribute.
+
+    Returns:
+        str: "use_tool" if the last message mentions booking or appointments,
+             otherwise "generate_response".
+    """
+    last_message = state[-1]
+    if "book" in last_message.content.lower() or "appointment" in last_message.content.lower():
+        return "use_tool"
+    
+def call_tool(state):
+    last_message = state[-1]
+    try:
+        # Parse tool call from AI message
+        tool_call = last_message.additional_kwargs.get("tool_calls", [{}])[0]
+        func_name = tool_call['function']['name']
+        args = json.loads(tool_call['function']['arguments'])
+
+        if func_name == "check_availability_tool":
+            date = parse_date(args.get('date', ''))
+            result = check_availability_tool(date)
+            return AIMessage(content=f"Available times on {date}: {', '.join(result)}")
+        
+        elif func_name == "book_appointment_tool":
+            date = parse_date(args.get('date', ''))
+            result = book_appointment_tool(
+                date = date,
+                time = args["time"],
+                summary=args["summary"]
+            )
+            return AIMessage(content=result)
+        return AIMessage(content="Tool not recognized")
+    
+    except Exception as e:
+        return AIMessage(content=f"Error: {str(e)}")
+        
+
