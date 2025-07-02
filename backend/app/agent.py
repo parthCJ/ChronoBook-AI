@@ -12,7 +12,7 @@ from langchain_core.utils.function_calling import convert_to_openai_function
 from langchain_openai import ChatOpenAI
 
 load_dotenv()
-api_key = os.getenv("API_KEY")
+api_key = os.getenv("DEEPSEEK_API_KEY")
 print(api_key)
 
 model = ChatDeepSeek(
